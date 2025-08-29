@@ -1,0 +1,534 @@
+#pragma once
+#include <iostream>
+#include<string>
+#include <fstream>
+#include <vector>
+#include<iomanip>
+
+using namespace std;
+
+class clsPrint
+{
+
+private:
+
+	enum enCaracterType { Capitalletter = 1, SmallLetter = 2, SpecialChar = 3, Degit = 4 };
+	enum enOperatorType { Add = 1, Sub = 2, Mul = 3, Div = 4, Mode = 5 };
+	enum enLevel { EasyLevel = 1, MedLevel = 2, HardLevel = 3 };
+
+protected:
+
+	static int RandomIntNum(int From, int To)
+	{
+		return rand() % (To - From + 1) + From;
+	}
+	static int ReverseNum(int Number)
+	{
+		int Remainder = 0;
+		int Reversed = 0;
+		while (Number > 0)
+		{
+			Remainder = Number % 10;
+			Number = Number / 10;
+			Reversed = Reversed * 10 + Remainder;
+		}
+		return Reversed;
+	}
+	static short ReverseNum(short Number)
+	{
+		short Remainder = 0;
+		short Reversed = 0;
+		while (Number > 0)
+		{
+			Remainder = Number % 10;
+			Number = Number / 10;
+			Reversed = Reversed * 10 + Remainder;
+		}
+		return Reversed;
+	}
+	static bool IsOdd(int Number)
+	{
+		if (Number % 2 != 0)
+			return 1;
+		else
+			return 0;
+	}
+	static bool IsEven(int Number)
+	{
+		if (Number % 2 == 0)
+			return 1;
+		else
+			return 0;
+	}
+	static bool IsPrime(int Number)
+	{
+		int M = round(Number / 2);
+		for (int counter = 2; counter <= M; counter++)
+			if (Number % counter == 0)
+				return 0;
+		return 1;
+	}
+	static bool IsPalindrome(int Number)
+	{
+		return (Number == ReverseNum(Number));
+	}
+	static bool IsPerfect(int Number)
+	{
+		int Sum = 0;
+		for (int i = 1; i < Number; i++)
+			if (Number % i == 0)
+				Sum += i;
+		return Number == Sum;
+	}
+	static bool IsVowel(char Letter)
+	{
+		Letter = tolower(Letter);
+		return (Letter == 'a') || (Letter == 'e') || (Letter == 'i') || (Letter == 'o') || (Letter == 'u');
+	}
+	static short DayOfWeekOrder(short Day, short Month, short Year)
+	{
+		short a, y, m;
+		a = (14 - Month) / 12;
+		y = Year - a;
+		m = Month + (12 * a) - 2;
+		// Gregorian:
+		//0:sun, 1:Mon, 2:Tue...etc
+		return (Day + y + (y / 4) - (y / 100) + (y / 400) + ((31 * m) / 12)) % 7;
+	}
+	static char RandomCharacter(enCaracterType CaracterType)
+	{
+		switch (CaracterType)
+		{
+		case enCaracterType::SmallLetter:
+			return char(RandomIntNum(97, 122));
+			break;
+		case enCaracterType::Capitalletter:
+			return char(RandomIntNum(65, 90));
+			break;
+		case enCaracterType::SpecialChar:
+			return char(RandomIntNum(33, 47));
+			break;
+		case enCaracterType::Degit:
+			return char(RandomIntNum(48, 57));
+			break;
+		}
+	}
+
+	string _Text = "";
+	int _Number = 0;
+	short _Num;
+
+public:
+
+	//============= set and get property ========================
+	string getText()
+	{
+		return _Text;
+	}
+	void setText(string Text)
+	{
+		this->_Text = Text;
+	}
+	__declspec(property(get=getText, put =setText ))string MyText;
+
+	int getNumber()
+	{
+		return _Number;
+	}
+	void setNumber(int Number)
+	{
+		this->_Number = Number;
+	}
+	__declspec(property(get = getNumber, put = setNumber))int IntNumber;
+
+	int getNum()
+	{
+		return _Num;
+	}
+	void setNum(short Num)
+	{
+		this->_Num = Num;
+	}
+	__declspec(property(get = getNum, put = setNum))short ShortNum;
+	/*_______________definition function ________________________ */
+	static void Print(string Text="")
+	{
+		cout << Text;
+	}
+	void Print()
+	{
+		clsPrint::Print(this->_Text);
+	}
+	
+	static void PrintRandomCharacters(enCaracterType CaracterType, short NumberOfCaracters = 1)
+	{
+		for (short i = 1; i <= NumberOfCaracters; i++)
+		{
+			cout << clsPrint::RandomCharacter(CaracterType);
+		}
+	}
+	static void PrintRandomUpperLetters(short NumberOfLetter = 1)
+	{
+		for (short i = 1; i <= NumberOfLetter; i++)
+		{
+			cout << clsPrint::RandomCharacter(enCaracterType::Capitalletter);
+		}
+	}
+	static void PrintRandomLowerLetters(short NumberOfLetter = 1)
+	{
+		for (short i = 1; i <= NumberOfLetter; i++)
+		{
+			cout << clsPrint::RandomCharacter(enCaracterType::SmallLetter);
+		}
+	}
+	static void PrintRandomSpecialCharacters(short NumberOfLetter = 1)
+	{
+		for (short i = 1; i <= NumberOfLetter; i++)
+		{
+			cout << clsPrint::RandomCharacter(enCaracterType::SpecialChar);
+		}
+	}
+	static void PrintPrimeNumbers(int From, int To)
+	{
+		for (int i = From; i <= To; i++)
+			if (IsPrime(i))
+				cout << i << " ";
+		cout << endl;
+	}
+	static void PrintOddNumbers(int From, int To)
+	{
+		for (int i = From; i <= To; i++)
+			if (IsOdd(i))
+				cout << i << " ";
+		cout << endl;
+	}
+	static void PrintEvenNumbers(int From, int To)
+	{
+		for (int i = From; i <= To; i++)
+			if (IsEven(i))
+				cout << i << " ";
+		cout << endl;
+	}
+	static void PrintPalindromeNums(int From, int To)
+	{
+		for (int i = From; i <= To; i++)
+			if (IsPalindrome(i))
+				cout << i << " ";
+		cout << endl;
+	}
+	static void PrintPerfectNumbers(int From, int To)
+	{
+		for (int i = From; i <= To; i++)
+			if (IsPerfect(i))
+				cout << i << " ";
+		cout << endl;
+	}
+
+
+	static string GenerateWord(enCaracterType CaracterType, int length=1)
+	{
+		string Word = "";
+		for (int i = 1; i <= length; i++)
+			Word = Word + RandomCharacter(CaracterType);
+		return Word;
+	}
+	static string GenerateKey()
+	{
+		string Key = "";
+		Key = GenerateWord(enCaracterType::Capitalletter, 4) + "-";
+		Key = Key + GenerateWord(enCaracterType::Capitalletter, 4) + "-";
+		Key = Key + GenerateWord(enCaracterType::Capitalletter, 4) + "-";
+		Key = Key + GenerateWord(enCaracterType::Capitalletter, 4);
+		return Key;
+	}
+
+	static string UpperAllString(string S1="")
+	{
+		for (short i = 0; i < S1.length(); i++)
+		{
+			S1[i] = toupper(S1[i]);
+		}
+		return S1;
+	}
+	string UpperAllString()
+	{
+		return clsPrint::UpperAllString(_Text);
+	}
+
+	static string LowerAllString(string S1="")
+	{
+		for (short i = 0; i < S1.length(); i++)
+		{
+			S1[i] = tolower(S1[i]);
+		}
+		return S1;
+	}
+	string LowerAllString()
+	{
+		return clsPrint::LowerAllString(_Text);
+	}
+
+	static void PrintDigitsOfNum(int Number)
+	{
+		int ReverceOfNumber = clsPrint::ReverseNum(Number);
+		while (ReverceOfNumber > 0)
+		{
+			int Remainder = 0;
+			Remainder = ReverceOfNumber % 10;
+			ReverceOfNumber = ReverceOfNumber / 10;
+			cout << Remainder << endl;
+		}
+	}
+	void PrintDigitsOfNum()
+	{
+		clsPrint::PrintDigitsOfNum(this->_Number);
+	}
+	
+	static string Tabs(int NumberOfTabs)
+	{
+		string Tab = "";
+		for (int i = 1; i <= NumberOfTabs; i++)
+			Tab += "\t";
+		return Tab;
+	}
+	string Tabs()
+	{
+		return clsPrint::Tabs(_Number);
+	}
+
+	static string BackSlashN(int NumberOfBackSlashN)
+	{
+		string BackSlash = "";
+		for (int i = 1; i <= NumberOfBackSlashN; i++)
+			BackSlash += "\n";
+		return BackSlash;
+	}
+	string BackSlashN()
+	{
+		return clsPrint::BackSlashN(_Number);
+	}
+
+	static string EncryptText(string text="", int EncriptedKey)
+	{
+		for (int i = 0; i <= text.length(); i++)
+			text[i] = char((int)text[i] + EncriptedKey);
+		return text;
+	}
+	string EncryptText(int EncriptedKey = 0)
+	{
+		return clsPrint::EncryptText(this->_Text, EncriptedKey);
+	}
+
+	static string DecryptText(string text="", int EncriptedKey)
+	{
+		for (int i = 0; i <= text.length(); i++)
+			text[i] = char((int)text[i] - EncriptedKey);
+		return text;
+	}
+	string DecryptText(int EncriptedKey = 0)
+	{
+		return clsPrint::DecryptText(this->_Text, EncriptedKey);
+	}
+
+	static void PrintKeys(int NumberOfKeys=0)
+	{
+		for (int i = 1; i <= NumberOfKeys; i++)
+		{
+			cout << GenerateKey() << endl;
+		}
+	}
+	void PrintKeys()
+	{
+		clsPrint::PrintKeys(this->_Number);
+	}
+
+	static void ResetScreen()
+	{
+		system("cls");
+		system("color 0F");
+	}
+	static char OperationTypeCaracter(enOperatorType OpType)
+	{
+		char arrOperationType[5] = { '+','-','*','/','%' };
+		return arrOperationType[OpType - 1];
+	}
+	static string LevelText(enLevel QuestionLevel)
+	{
+		string arrQuestionLvel[3] = { "Easy","Med","Hard" };
+		return arrQuestionLvel[QuestionLevel - 1];
+	}
+	static string WinOrFaiLText(bool IsWin=0)
+	{
+		if (IsWin)
+			return " Win :-) \n";
+		else
+			" Fail :-( \n";
+	}
+	static void SetScreenColor(bool IsCorrect=0)
+	{
+		if (IsCorrect)
+		{
+			system("color 2F");//green screen color
+
+		}
+		else
+		{
+			system("color 4F");//red screen color
+			cout << "\a";
+		}
+	}
+	static void PrintGameResultsScreen()
+	{
+		cout << Tabs(2) << "______________________________________________________  \n";
+		cout << Tabs(2) << "                   +++ Game Result +++ \n";
+		cout << Tabs(2) << "--------------------------------------------------------\n\n";
+	}
+	static void ShowGameOverScreen()
+	{
+		cout << "\n\n____________________________________________________________\n";
+		cout << "                    + + + G a m e O v e r + + +                   \n";
+		cout << "___________________________________________________________________\n\n";
+	}
+
+	static void PrintFibonatchiSerie(int Number)
+	{
+		int  FebonatchiNumber = 0;
+		int Previous2 = 0, Previous1 = 1;
+		//cout << "1 ";
+		for (short i = 0; i < Number; ++i)
+		{
+			cout << FebonatchiNumber << " ";
+
+			Previous2 = Previous1;
+
+			Previous1 = FebonatchiNumber;
+
+			FebonatchiNumber = Previous1 + Previous2;
+
+		}
+
+
+	}
+	static void PrintFibonacciUsingRecurssion(short Number, int Prev1, int Prev2)
+	{
+		int FebNumber = 0;
+		if (Number > 0)
+		{
+			FebNumber = Prev2 + Prev1;
+			Prev2 = Prev1;
+			Prev1 = FebNumber;
+			cout << FebNumber << " ";
+			PrintFibonacciUsingRecurssion(Number - 1, Prev1, Prev2);
+		}
+	}
+	
+	static void PrintFirstLetterOfWords(string S1)
+	{
+
+		bool IsFirstLetter = true;
+		cout << "\n First Lettrer of this string \n";
+		for (int i = 0; i < S1.length(); i++)
+		{
+			if (S1[i] != ' ' && IsFirstLetter)
+				cout << S1[i] << endl;
+			IsFirstLetter = ((S1[i] == ' ') ? true : false);
+		}
+	}
+	void PrintFirstLetterOfWords()
+	{
+		clsPrint::PrintFirstLetterOfWords(this->_Text);
+	}
+
+	static void PrintVowels(string S1)
+	{
+
+		short Counter = 0;
+		cout << "\n Vowels In String are : ";
+		for (short i = 0; i < S1.length(); i++)
+		{
+			if (IsVowel(S1[i]))
+				cout << S1[i] << "   ";
+		}
+		cout << endl;
+
+	}
+	void PrintVowels()
+	{
+		clsPrint::PrintVowels(this->_Text);
+	}
+
+	static void PrintEachWord(string S1)
+	{
+		string delim = " "; // delimiter
+		cout << "\nYour string wrords are: \n\n";
+		short pos = 0;
+		string sWord; // define a string variable// use find() function to get the position of the delimiters
+		while ((pos = S1.find(delim)) != std::string::npos)
+		{
+			sWord = S1.substr(0, pos); // store the word
+			if (sWord != "")
+			{
+				cout << sWord << endl;
+			}
+			S1.erase(0, pos + delim.length());
+		}
+		if (S1 != "")
+		{
+			cout << S1 << endl; // it print last word of the string.
+		}
+	}
+	void PrintEachWord()
+	{
+		clsPrint::PrintEachWord(_Text);
+	}
+	
+	static void SaveStringToFile(string FileName,string S1)
+	{
+
+		fstream MyFile;
+		MyFile.open(FileName, ios::out | ios::app);//append mode the combiler say to c++ so go open the file or if his not iwist make it and open it to write or to append and give the priority to apped
+		if (MyFile.is_open())
+		{
+			MyFile << S1 << "\n";
+			MyFile.close();
+		}
+
+
+	}
+	void SaveStringToFile(string FileName)
+	{
+		clsPrint::SaveStringToFile(FileName, _Text);
+	}
+
+	string DayShortName(short DayOfWeekOrder)
+	{
+		string arrDayNames[] = { "Sun","Mon","Tue","Wed","Thu","Fri","Sat" };
+		return arrDayNames[DayOfWeekOrder - 1];
+	}
+	void PrintDayName()
+	{
+		cout<<clsPrint::DayShortName(this->_Num);
+	}
+
+	string MonthShortName(short MonthOfYearOrder)
+	{
+		string arrMonthNames[] = { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" };
+		return arrMonthNames[MonthOfYearOrder - 1];
+	}
+	void PrintMonthName()
+	{
+		cout << clsPrint::MonthShortName(this->_Num);
+	}
+
+	void PrintDaysLineFormat()
+	{
+		for (short i = 1; i <= 7; i++)
+			cout << setw(6) << DayShortName(i) << "";
+		cout << endl;
+
+	}
+
+
+
+};
+
