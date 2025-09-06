@@ -4,115 +4,16 @@
 #include <fstream>
 #include <vector>
 #include<iomanip>
+#include "clsString.h";
+#include "clsMath.h";
+#include "clsUtil.h";
 
 using namespace std;
 
 class clsPrint
 {
 
-private:
-
-	enum enCaracterType { Capitalletter = 1, SmallLetter = 2, SpecialChar = 3, Degit = 4 };
-	enum enOperatorType { Add = 1, Sub = 2, Mul = 3, Div = 4, Mode = 5 };
-	enum enLevel { EasyLevel = 1, MedLevel = 2, HardLevel = 3 };
-
 protected:
-
-	static int RandomIntNum(int From, int To)
-	{
-		return rand() % (To - From + 1) + From;
-	}
-	static int ReverseNum(int Number)
-	{
-		int Remainder = 0;
-		int Reversed = 0;
-		while (Number > 0)
-		{
-			Remainder = Number % 10;
-			Number = Number / 10;
-			Reversed = Reversed * 10 + Remainder;
-		}
-		return Reversed;
-	}
-	static short ReverseNum(short Number)
-	{
-		short Remainder = 0;
-		short Reversed = 0;
-		while (Number > 0)
-		{
-			Remainder = Number % 10;
-			Number = Number / 10;
-			Reversed = Reversed * 10 + Remainder;
-		}
-		return Reversed;
-	}
-	static bool IsOdd(int Number)
-	{
-		if (Number % 2 != 0)
-			return 1;
-		else
-			return 0;
-	}
-	static bool IsEven(int Number)
-	{
-		if (Number % 2 == 0)
-			return 1;
-		else
-			return 0;
-	}
-	static bool IsPrime(int Number)
-	{
-		int M = round(Number / 2);
-		for (int counter = 2; counter <= M; counter++)
-			if (Number % counter == 0)
-				return 0;
-		return 1;
-	}
-	static bool IsPalindrome(int Number)
-	{
-		return (Number == ReverseNum(Number));
-	}
-	static bool IsPerfect(int Number)
-	{
-		int Sum = 0;
-		for (int i = 1; i < Number; i++)
-			if (Number % i == 0)
-				Sum += i;
-		return Number == Sum;
-	}
-	static bool IsVowel(char Letter)
-	{
-		Letter = tolower(Letter);
-		return (Letter == 'a') || (Letter == 'e') || (Letter == 'i') || (Letter == 'o') || (Letter == 'u');
-	}
-	static short DayOfWeekOrder(short Day, short Month, short Year)
-	{
-		short a, y, m;
-		a = (14 - Month) / 12;
-		y = Year - a;
-		m = Month + (12 * a) - 2;
-		// Gregorian:
-		//0:sun, 1:Mon, 2:Tue...etc
-		return (Day + y + (y / 4) - (y / 100) + (y / 400) + ((31 * m) / 12)) % 7;
-	}
-	static char RandomCharacter(enCaracterType CaracterType)
-	{
-		switch (CaracterType)
-		{
-		case enCaracterType::SmallLetter:
-			return char(RandomIntNum(97, 122));
-			break;
-		case enCaracterType::Capitalletter:
-			return char(RandomIntNum(65, 90));
-			break;
-		case enCaracterType::SpecialChar:
-			return char(RandomIntNum(33, 47));
-			break;
-		case enCaracterType::Degit:
-			return char(RandomIntNum(48, 57));
-			break;
-		}
-	}
 
 	string _Text = "";
 	int _Number = 0;
@@ -160,117 +61,73 @@ public:
 		clsPrint::Print(this->_Text);
 	}
 	
-	static void PrintRandomCharacters(enCaracterType CaracterType, short NumberOfCaracters = 1)
+	static void PrintRandomCharacters(clsUtil::enCharType CaracterType, short NumberOfCaracters = 1)
 	{
 		for (short i = 1; i <= NumberOfCaracters; i++)
 		{
-			cout << clsPrint::RandomCharacter(CaracterType);
+			cout << clsUtil::GetRandomCharacter(CaracterType);
 		}
 	}
 	static void PrintRandomUpperLetters(short NumberOfLetter = 1)
 	{
 		for (short i = 1; i <= NumberOfLetter; i++)
 		{
-			cout << clsPrint::RandomCharacter(enCaracterType::Capitalletter);
+			cout << clsUtil::GetRandomCharacter(clsUtil::enCharType::Capitalletter);
 		}
 	}
 	static void PrintRandomLowerLetters(short NumberOfLetter = 1)
 	{
 		for (short i = 1; i <= NumberOfLetter; i++)
 		{
-			cout << clsPrint::RandomCharacter(enCaracterType::SmallLetter);
+			cout << clsUtil::GetRandomCharacter(clsUtil::enCharType::SmallLetter);
 		}
 	}
 	static void PrintRandomSpecialCharacters(short NumberOfLetter = 1)
 	{
 		for (short i = 1; i <= NumberOfLetter; i++)
 		{
-			cout << clsPrint::RandomCharacter(enCaracterType::SpecialChar);
+			cout << clsUtil::GetRandomCharacter(clsUtil::enCharType::SpecialChar);
 		}
 	}
 	static void PrintPrimeNumbers(int From, int To)
 	{
 		for (int i = From; i <= To; i++)
-			if (IsPrime(i))
+			if (clsMath::IsPrime(i))
 				cout << i << " ";
 		cout << endl;
 	}
 	static void PrintOddNumbers(int From, int To)
 	{
 		for (int i = From; i <= To; i++)
-			if (IsOdd(i))
+			if (clsMath::IsOdd(i))
 				cout << i << " ";
 		cout << endl;
 	}
 	static void PrintEvenNumbers(int From, int To)
 	{
 		for (int i = From; i <= To; i++)
-			if (IsEven(i))
+			if (clsMath::IsEven(i))
 				cout << i << " ";
 		cout << endl;
 	}
 	static void PrintPalindromeNums(int From, int To)
 	{
 		for (int i = From; i <= To; i++)
-			if (IsPalindrome(i))
+			if (clsMath::IsPalindrome(i))
 				cout << i << " ";
 		cout << endl;
 	}
 	static void PrintPerfectNumbers(int From, int To)
 	{
 		for (int i = From; i <= To; i++)
-			if (IsPerfect(i))
+			if (clsMath::IsPerfect(i))
 				cout << i << " ";
 		cout << endl;
 	}
 
-
-	static string GenerateWord(enCaracterType CaracterType, int length=1)
-	{
-		string Word = "";
-		for (int i = 1; i <= length; i++)
-			Word = Word + RandomCharacter(CaracterType);
-		return Word;
-	}
-	static string GenerateKey()
-	{
-		string Key = "";
-		Key = GenerateWord(enCaracterType::Capitalletter, 4) + "-";
-		Key = Key + GenerateWord(enCaracterType::Capitalletter, 4) + "-";
-		Key = Key + GenerateWord(enCaracterType::Capitalletter, 4) + "-";
-		Key = Key + GenerateWord(enCaracterType::Capitalletter, 4);
-		return Key;
-	}
-
-	static string UpperAllString(string S1="")
-	{
-		for (short i = 0; i < S1.length(); i++)
-		{
-			S1[i] = toupper(S1[i]);
-		}
-		return S1;
-	}
-	string UpperAllString()
-	{
-		return clsPrint::UpperAllString(_Text);
-	}
-
-	static string LowerAllString(string S1="")
-	{
-		for (short i = 0; i < S1.length(); i++)
-		{
-			S1[i] = tolower(S1[i]);
-		}
-		return S1;
-	}
-	string LowerAllString()
-	{
-		return clsPrint::LowerAllString(_Text);
-	}
-
 	static void PrintDigitsOfNum(int Number)
 	{
-		int ReverceOfNumber = clsPrint::ReverseNum(Number);
+		int ReverceOfNumber = clsMath::ReverseNum(Number);
 		while (ReverceOfNumber > 0)
 		{
 			int Remainder = 0;
@@ -334,7 +191,7 @@ public:
 	{
 		for (int i = 1; i <= NumberOfKeys; i++)
 		{
-			cout << GenerateKey() << endl;
+			cout << clsUtil::GenerateKey() << endl;
 		}
 	}
 	void PrintKeys()
@@ -347,12 +204,12 @@ public:
 		system("cls");
 		system("color 0F");
 	}
-	static char OperationTypeCaracter(enOperatorType OpType)
+	static char OperationTypeCaracter(clsUtil::enCharType OpType)
 	{
 		char arrOperationType[5] = { '+','-','*','/','%' };
 		return arrOperationType[OpType - 1];
 	}
-	static string LevelText(enLevel QuestionLevel)
+	static string LevelText(clsUtil::enLevel QuestionLevel)
 	{
 		string arrQuestionLvel[3] = { "Easy","Med","Hard" };
 		return arrQuestionLvel[QuestionLevel - 1];
@@ -446,7 +303,7 @@ public:
 		cout << "\n Vowels In String are : ";
 		for (short i = 0; i < S1.length(); i++)
 		{
-			if (IsVowel(S1[i]))
+			if (clsString::IsVowel(S1[i]))
 				cout << S1[i] << "   ";
 		}
 		cout << endl;
